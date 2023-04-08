@@ -1,0 +1,16 @@
+#root {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   scroll-behavior: smooth;
+}
+
+.theme_ico{
+   cursor: pointer
+}
+.theme_ico .setting_ico{
+   transition: transform .8s;
+}
+.theme_ico:hover .setting_ico{
+   transform: rotate(360deg);
+}
