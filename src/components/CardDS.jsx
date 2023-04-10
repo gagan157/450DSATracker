@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-function CardDS({ name, listlength }) {
+function CardDS({ name, cardidx ,listlength }) {
   const { cardColor } = useSelector((state) => state.theme);
   const { totalChecked } = useSelector((state) => state.dsName);
   const navigate = useNavigate();
@@ -13,17 +13,17 @@ function CardDS({ name, listlength }) {
     <div
       onClick={() => {
         navigate(`/${name.replace(name, name.split(" ").join("-"))}`, {
-          state: { name: name },
+          state: { name: name,cardidx },
         });
       }}
-      className="p-4 rounded-lg w-1/5 flex-grow cursor-pointer shadow-md"
+      className="p-4 card-flex-basis flex-shrink flex-grow  rounded-lg cursor-pointer shadow-md"
       style={{ backgroundColor: cardColor }}
     >
       <h2 className="font-bold text-lg">{name}</h2>
       <div>
         Total Questions: <span className="font-semibold">{listlength}</span>{" "}
       </div>
-      {console.log(totalChecked)}
+     
       {!totalChecked[name] && (
         <span className="text-red-500">Not yet Started</span>
       )}

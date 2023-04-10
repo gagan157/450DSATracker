@@ -14,3 +14,7 @@
 .theme_ico:hover .setting_ico{
    transform: rotate(360deg);
 }
+
+.card-flex-basis{
+   flex-basis: 300px;
+}

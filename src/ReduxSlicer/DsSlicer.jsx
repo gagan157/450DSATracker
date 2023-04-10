@@ -1,24 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { data } from "../../../question";
+// import { data } from "../../../question";
+import ReadDataFirebase,{UpdateDataFirebase} from "../firebase/sendDataToFirebase";
 
-const createState = () => {
-  let listArray = [];
-  let prev = { Array: [] };
-  for (let { Column1, QuestionsbyLoveBabbar } of data) {
-    if (Column1 === Object.keys(prev)[0]) {
-      prev[Column1].push({ qname: QuestionsbyLoveBabbar, checked: false });
-    } else {
-      listArray.push(prev);
-      prev = { [Column1]: [] };
-    }
-  }
-  listArray.push(prev);
+//Send data to firebase onces
+// const createState = () => {
+//   let listArray = [];
+//   let prev = { Array: [] };
+//   for (let { Column1, QuestionsbyLoveBabbar } of data) {
+//     if (Column1 === Object.keys(prev)[0]) {
+//       prev[Column1].push({ qname: QuestionsbyLoveBabbar, checked: false });
+//     } else {
+//       listArray.push(prev);
+//       prev = { [Column1]: [] };
+//     }
+//   }
+//   listArray.push(prev);
+  
+//   return listArray;
+// };
 
-  return listArray;
-};
+
+
 
 const initialState = {
-  dsList: createState(),
+  dsList: [],
   totalChecked: {},
 };
 
@@ -26,6 +31,10 @@ const DsSlicer = createSlice({
   name: "DSName",
   initialState,
   reducers: {
+    setdata: (state,action)=>{return {      
+      ...state,dsList:action.payload.data,totalChecked:action.payload.totalDsaCompeteCount
+    
+    }},
     isCompleted: (state, action) => {
       return {
         ...state,
@@ -63,5 +72,30 @@ const DsSlicer = createSlice({
   },
 });
 
-export const { isCompleted } = DsSlicer.actions;
+
+
+
+
+export const { isCompleted, setdata} = DsSlicer.actions;
 export default DsSlicer.reducer;
+
+
+
+export async function thunkCreateState(dispatch){  
+  let data = await ReadDataFirebase()
+  let totalDsaCompeteCount = {}
+   data.map((obj)=>{
+    let key = Object.keys(obj)[0]
+    let length = obj[key].filter(item=> item.checked === true).length
+      if(length > 0){
+        totalDsaCompeteCount[key] = length
+      }
+  })
+  dispatch(setdata({data:data,totalDsaCompeteCount:totalDsaCompeteCount}))
+}
+
+export function thunkUpdateDataFirebase(obj){
+  
+  UpdateDataFirebase(obj)
+ 
+}
